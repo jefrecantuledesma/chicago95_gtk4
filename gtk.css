@@ -60,6 +60,10 @@
 
 /* fond de barre */
 /* color: séparations verticales dans la barre */
+ * {
+     font-family: "Liberation Sans"; 
+     font-size: 12px;
+     } 
 
 headerbar, messagedialog .titlebar {
     background-color: @headerbar_bg_color; /* fond de barre */
@@ -84,9 +88,13 @@ headerbar *:backdrop, .titlebar .title:backdrop, .titlebar:backdrop {
 
 window.csd {
     margin: 0;
-    border-radius: 6px 6px 0 0;
-    box-shadow: 6px 6px 6px 0 shade(@darker_color,0.5), 0 0 0 1px @headerbar_bg_color;
-    /* le 2e item est pour fermer la fenêtre par un filet */
+    border-radius: 0; /* Ensures the window has sharp corners */
+    border-left: 1px solid @outset_lighter_color;
+    border-top: 1px solid @outset_lighter_color;
+    border-right: 2px solid @outset_darker_color;
+    border-bottom: 2px solid @outset_darker_color;
+    padding: 2px; /* Space between the outer and inner border */
+    background-color: @base_color; /* Background color for the padding area, simulating the light effect */
 }
 
 
@@ -112,12 +120,29 @@ button {
     border-top: 1px solid @outset_lighter_color;
     border-right: 2px solid @outset_darker_color;
     border-bottom: 2px solid @outset_darker_color;
-    button:hover {
-        -gtk-icon-filter: brightness(1.2);
-    }
 }
 
-button:active, button:checked {
+button:hover {
+    background-color: shade(@base_color, 1.1); /* Lightens the button on hover */
+    -gtk-icon-filter: brightness(1.2);
+}
+
+/* Toggle button adjustments for selected state */
+button:checked {
+    background-color: @lighter_color; /* Lighter background for selected state */
+    color: @black_color; /* Dark color for text */
+    border-top: 2px solid @black_color; /* Black top border */
+    border-left: 2px solid @black_color; /* Black left border */
+    border-right: 1px solid @white_color; /* White right border */
+    border-bottom: 1px solid @white_color; /* White bottom border */
+}
+
+button:checked:hover {
+    background-color: shade(@lighter_color, 0.9); /* Slightly darker on hover for feedback */
+}
+
+/* Adjustment for active (including pressed) state */
+button:active {
     background-color:@darker_color;
     border-left: 2px solid @inset_darker_color;
     border-top: 2px solid @inset_darker_color;
@@ -125,19 +150,18 @@ button:active, button:checked {
     border-bottom: 1px solid @inset_lighter_color;
 }
 
-/*mod le 1er mars 2024*/
-button:checked:hover,button:active:hover {
-    background-color:@darker_color;
+button:active:hover {
+    background-color: shade(@darker_color, 0.9);
 }
 
+/* Adjustments for disabled checked state */
 button:disabled:checked  {
     border-left: 1px solid @outset_lighter_color;
     border-top: 1px solid @outset_lighter_color;
     border-right: 2px solid @outset_darker_color;
     border-bottom: 2px solid @outset_darker_color;
-    background-color:@base_color;
+    background-color: shade(@base_color, 0.8); /* Slightly lighter for distinguishable disabled state */
 }
-
 
 button label {
     padding-left: 2px;
@@ -149,24 +173,24 @@ button:disabled, button label:disabled {
     color: @darker_color;
 }
 
-button:checked label:disabled {
+label:disabled {
     color: @darker_color;
 }
 
-
-/*ajout du 1er mars 2024: widgetfactory*/
+/* Adjustment for button with image when active */
 button image:active {
     color: @black_color;
-    background-color: @darker_color;;
+    background-color: @darker_color;
 }
 
-/*ajout du 2 fév 2024: pages/print/miseenpage*/
+/* Adjustment for stack row in button context */
 button stack row {
     background-color: transparent;
-    margin :0;
+    margin: 0;
     padding: 0;
 }
 
+/* Headerbar button adjustments */
 headerbar button {
     border-left: 1px solid @outset_lighter_color;
     border-top: 1px solid @outset_lighter_color;
@@ -180,20 +204,8 @@ headerbar button {
     color: @black_color;
 }
 
-
-/* bouton sélectionné, actif ? */
-headerbar button:checked, headerbar button:checked:hover, headerbar button:active, headerbar button:active:hover {
-    background-color: @lighter_color;
-    color: @black_color;
-}
-
-/*ajouts du 21 jan 2024*/
 headerbar button:hover {
-    background-color: @lighter_color;
-    border-left: 1px solid @outset_lighter_color;
-    border-top: 1px solid @outset_lighter_color;
-    border-right: 1px solid @outset_darker_color;
-    border-bottom: 1px solid @outset_darker_color;
+    background-color: shade(@base_color, 1.1);
 }
 
 headerbar button:disabled {
@@ -206,6 +218,11 @@ headerbar windowcontrols .close:hover {
 
 headerbar windowcontrols .close:hover:active {
     color: @darker_color;
+}
+
+headerbar:backdrop {
+    background-color: @darker_color; /* Dark grey when window is not in focus */
+    color: @lighter_color; /* Adjust text color if necessary for contrast */
 }
 
 /**********************************************/
@@ -1052,6 +1069,46 @@ menuitem radio:disabled:checked {
     -gtk-icon-source: url("../img/menuitem-radio-checked-disabled.png");
 }
 
+/* GPT generated fixes */
+/* Enhancements for checkbutton and radiobutton with 3-D effect */
+checkbutton, radiobutton {
+    color: @black_color;
+    background-color: @base_color;
+    border-top: 1px solid @white_color; /* Top border in white for 3-D raised effect */
+    border-left: 1px solid @white_color; /* Left border in white for 3-D raised effect */
+    border-bottom: 1px solid @black_color; /* Bottom border in black for shadow */
+    border-right: 1px solid @black_color; /* Right border in black for shadow */
+}
+
+checkbutton:disabled, radiobutton:disabled {
+    color: @darker_color;
+}
+
+/* Visual indicators for the checked state */
+checkbutton:checked, radiobutton:checked {
+    background-color: @lighter_color; /* Darker background for a pressed effect */
+    color: @black_color;
+    border-top: 1px solid @black_color; /* Reverse the 3-D effect for a "pressed" look */
+    border-left: 1px solid @black_color; /* Reverse the 3-D effect for a "pressed" look */
+    border-bottom: 1px solid @white_color; /* White bottom border for the pressed shadow */
+    border-right: 1px solid @white_color; /* White right border for the pressed shadow */
+}
+
+/* Hover state enhancements for better interactivity feedback */
+checkbutton:hover, radiobutton:hover {
+    background-color: shade(@base_color, 1.1);
+}
+
+checkbutton:checked:hover, radiobutton:checked:hover {
+    background-color: shade(@lighter_color, 1.1);
+}
+
+/* Adjust spacing between the checkbutton/radiobutton and its label */
+checkbutton label, radiobutton label {
+    margin-right: 8px; /* Adds space to the left of the label text */
+    margin-left: 8px;
+}
+
 /* handbrake/defaults audio; tweaktools/bureau*/
 list row checkbutton, list row radiobutton {
     background-color: transparent;
@@ -1073,17 +1130,43 @@ list row radio:disabled {
 /**********************************************/
 /* switch */
 /**********************************************/
-
+/* Switch modifications */
 switch {
     font-weight: bold;
-    background-color: @scale_color;
     color: @black_color;
+    background-color: @darker_color;
     border-left: 2px solid @inset_darker_color;
     border-top: 2px solid @inset_darker_color;
     border-right: 1px solid @inset_lighter_color;
     border-bottom: 1px solid @inset_lighter_color;
     min-height: 27px;
     min-width: 75px;
+}
+
+/* Switch background color for the "on" state */
+switch:checked {
+   background-color: @scale_color; /* Blue when on */
+}
+
+switch slider {
+    background-color: @base_color; /* Slider color */
+    padding: 1px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url("../img/scrollbar_thumb.png");
+    border-left: 1px solid @outset_lighter_color;
+    border-top: 1px solid @outset_lighter_color;
+    border-right: 2px solid @outset_darker_color;
+    border-bottom: 2px solid @outset_darker_color;
+}
+
+/* Adjustments for disabled state, if needed */
+switch:disabled {
+    background-color: shade(@darker_color, 0.75); /* Slightly lighter grey when disabled and off */
+}
+
+switch:disabled:checked {
+    background-color: shade(@scale_color, 0.75); /* Slightly lighter blue when disabled and on */
 }
 
 list switch {
@@ -1097,30 +1180,9 @@ headerbar switch {
     margin: 2px;
 }
 
-switch:checked {
-   background-color: @scale_color;
-}
-
-switch slider {
-    background-color: @base_color;
-    padding: 1px;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-image: url("../img/scrollbar_thumb.png");
-    border-left: 1px solid @outset_lighter_color;
-    border-top: 1px solid @outset_lighter_color;
-    border-right: 2px solid @outset_darker_color;
-    border-bottom: 2px solid @outset_darker_color;
-}
-
 list switch slider {
     border-right: 1px solid @outset_darker_color;
     border-bottom: 1px solid @outset_darker_color;
-}
-
-switch:disabled {
-    background-color: @darker_color;
-    color: @base_color;
 }
 
 switch:disabled slider {
